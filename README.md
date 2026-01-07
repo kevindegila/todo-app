@@ -11,23 +11,21 @@ A simple, clean todo list application built with vanilla HTML, CSS, and JavaScri
 - Drag and drop to reorder tasks
 - Smooth animations
 - Data persistence with localStorage
+- Due dates with visual indicators (overdue in red, due soon in yellow)
+- Search tasks by keyword
+- Clear all completed tasks at once
 
 ## Planned Features (Priority Order)
 
-### High Priority
-1. **Due dates** - Add optional due date to tasks with visual indicators for overdue items
-2. **Search** - Filter tasks by typing keywords
-3. **Clear completed** - Button to delete all completed tasks at once
-
 ### Medium Priority
-4. **Categories/Tags** - Color-coded labels like "Work", "Personal", "Urgent"
-5. **Dark mode** - Toggle between light/dark themes
-6. **Undo delete** - Brief toast notification with "Undo" option after deleting
+1. **Categories/Tags** - Color-coded labels like "Work", "Personal", "Urgent"
+2. **Dark mode** - Toggle between light/dark themes
+3. **Undo delete** - Brief toast notification with "Undo" option after deleting
 
 ### Low Priority
-7. **Export/Import** - Download tasks as JSON or restore from backup
-8. **Timestamps** - Show when each task was created
-9. **Empty state illustration** - Add a simple graphic when no tasks exist
+4. **Export/Import** - Download tasks as JSON or restore from backup
+5. **Timestamps** - Show when each task was created
+6. **Empty state illustration** - Add a simple graphic when no tasks exist
 
 ## Usage
 

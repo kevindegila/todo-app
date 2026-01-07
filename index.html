@@ -32,10 +32,10 @@
     .input-section {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
-    .input-section input {
+    .input-section input[type="text"] {
       flex: 1;
       padding: 12px 16px;
       border: 2px solid #ddd;
@@ -45,7 +45,7 @@
       transition: border-color 0.2s;
     }
 
-    .input-section input:focus {
+    .input-section input[type="text"]:focus {
       border-color: #007bff;
     }
 
@@ -62,6 +62,51 @@
 
     .input-section button:hover {
       background: #0056b3;
+    }
+
+    /* Due date input row */
+    .date-section {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .date-section label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .date-section input[type="date"] {
+      padding: 8px 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .date-section input[type="date"]:focus {
+      border-color: #007bff;
+    }
+
+    /* Search section */
+    .search-section {
+      margin-bottom: 16px;
+    }
+
+    .search-section input {
+      width: 100%;
+      padding: 10px 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-section input:focus {
+      border-color: #007bff;
     }
 
     /* Filter and Counter Section */
@@ -107,6 +152,33 @@
     .task-counter span {
       font-weight: 600;
       color: #007bff;
+    }
+
+    /* Clear completed button */
+    .clear-completed {
+      padding: 8px 16px;
+      border: 2px solid #dc3545;
+      background: white;
+      color: #dc3545;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .clear-completed:hover {
+      background: #dc3545;
+      color: white;
+    }
+
+    .clear-completed:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .clear-completed:disabled:hover {
+      background: white;
+      color: #dc3545;
     }
 
     .todo-list {
@@ -159,6 +231,11 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       animation: slideIn 0.3s ease-out;
       transition: all 0.3s ease;
+      cursor: grab;
+    }
+
+    .todo-item:active {
+      cursor: grabbing;
     }
 
     .todo-item.removing {
@@ -174,8 +251,47 @@
       color: #888;
     }
 
+    .todo-item.completed .due-date {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    .todo-item.overdue {
+      border-left: 4px solid #dc3545;
+    }
+
+    .todo-item.due-soon {
+      border-left: 4px solid #ffc107;
+    }
+
     .todo-item.just-completed .todo-checkbox {
       animation: checkmark 0.3s ease;
+    }
+
+    .todo-item.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .todo-item.drag-over {
+      border-top: 2px solid #007bff;
+      margin-top: -2px;
+    }
+
+    .drag-handle {
+      color: #ccc;
+      font-size: 18px;
+      cursor: grab;
+      user-select: none;
+      padding: 0 4px;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .todo-item.dragging .drag-handle {
+      cursor: grabbing;
     }
 
     .todo-checkbox {
@@ -183,13 +299,19 @@
       height: 22px;
       cursor: pointer;
       accent-color: #28a745;
+      flex-shrink: 0;
+    }
+
+    .todo-content {
+      flex: 1;
+      min-width: 0;
     }
 
     .todo-text {
-      flex: 1;
       font-size: 16px;
       color: #333;
       transition: color 0.3s, text-decoration 0.3s;
+      word-break: break-word;
     }
 
     .todo-text.editing {
@@ -199,9 +321,26 @@
       outline: none;
     }
 
+    .due-date {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .due-date.overdue {
+      color: #dc3545;
+      font-weight: 600;
+    }
+
+    .due-date.due-soon {
+      color: #e0a800;
+      font-weight: 600;
+    }
+
     .todo-actions {
       display: flex;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .todo-actions button {
@@ -251,39 +390,13 @@
       animation: slideIn 0.3s ease-out;
     }
 
-    /* Drag and Drop styles */
-    .todo-item {
-      cursor: grab;
-    }
-
-    .todo-item:active {
-      cursor: grabbing;
-    }
-
-    .todo-item.dragging {
-      opacity: 0.5;
-      cursor: grabbing;
-    }
-
-    .todo-item.drag-over {
-      border-top: 2px solid #007bff;
-      margin-top: -2px;
-    }
-
-    .drag-handle {
-      color: #ccc;
-      font-size: 18px;
-      cursor: grab;
-      user-select: none;
-      padding: 0 4px;
-    }
-
-    .drag-handle:active {
-      cursor: grabbing;
-    }
-
-    .todo-item.dragging .drag-handle {
-      cursor: grabbing;
+    .secondary-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
   </style>
 </head>
@@ -296,6 +409,15 @@
       <button onclick="addTodo()">Add</button>
     </div>
 
+    <div class="date-section">
+      <label for="dueDateInput">Due date (optional):</label>
+      <input type="date" id="dueDateInput" />
+    </div>
+
+    <div class="search-section">
+      <input type="text" id="searchInput" placeholder="Search tasks..." oninput="handleSearch()" />
+    </div>
+
     <div class="toolbar">
       <div class="filter-buttons">
         <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
@@ -305,12 +427,17 @@
       <div class="task-counter" id="taskCounter"></div>
     </div>
 
+    <div class="secondary-toolbar">
+      <button class="clear-completed" id="clearCompletedBtn" onclick="clearCompleted()">Clear Completed</button>
+    </div>
+
     <ul class="todo-list" id="todoList"></ul>
   </div>
 
   <script>
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
     let currentFilter = 'all';
+    let searchQuery = '';
 
     function saveTodos() {
       localStorage.setItem('todos', JSON.stringify(todos));
@@ -327,17 +454,67 @@
       renderTodos();
     }
 
+    function handleSearch() {
+      searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+      renderTodos();
+    }
+
     function getFilteredTodos() {
+      let filtered = todos.map((todo, index) => ({ ...todo, originalIndex: index }));
+
+      // Apply search filter
+      if (searchQuery) {
+        filtered = filtered.filter(todo =>
+          todo.text.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      // Apply status filter
       switch (currentFilter) {
         case 'active':
-          return todos.map((todo, index) => ({ ...todo, originalIndex: index }))
-                      .filter(todo => !todo.completed);
+          return filtered.filter(todo => !todo.completed);
         case 'completed':
-          return todos.map((todo, index) => ({ ...todo, originalIndex: index }))
-                      .filter(todo => todo.completed);
+          return filtered.filter(todo => todo.completed);
         default:
-          return todos.map((todo, index) => ({ ...todo, originalIndex: index }));
+          return filtered;
       }
+    }
+
+    function getDueDateStatus(dueDate) {
+      if (!dueDate) return null;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const due = new Date(dueDate);
+      due.setHours(0, 0, 0, 0);
+
+      const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) return 'overdue';
+      if (diffDays <= 2) return 'due-soon';
+      return 'upcoming';
+    }
+
+    function formatDueDate(dueDate) {
+      if (!dueDate) return '';
+
+      const date = new Date(dueDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const due = new Date(dueDate);
+      due.setHours(0, 0, 0, 0);
+
+      const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0) return 'Due today';
+      if (diffDays === 1) return 'Due tomorrow';
+      if (diffDays === -1) return 'Due yesterday';
+      if (diffDays < -1) return `Overdue by ${Math.abs(diffDays)} days`;
+      if (diffDays <= 7) return `Due in ${diffDays} days`;
+
+      return `Due ${date.toLocaleDateString()}`;
     }
 
     function updateCounter() {
@@ -350,6 +527,10 @@
       } else {
         counter.innerHTML = `<span>${completed}</span> of <span>${total}</span> completed`;
       }
+
+      // Update clear completed button
+      const clearBtn = document.getElementById('clearCompletedBtn');
+      clearBtn.disabled = completed === 0;
     }
 
     function renderTodos() {
@@ -364,36 +545,58 @@
       }
 
       if (filteredTodos.length === 0) {
-        const message = currentFilter === 'active'
-          ? 'No active tasks. Great job!'
-          : 'No completed tasks yet.';
+        let message = 'No tasks found.';
+        if (searchQuery) {
+          message = `No tasks matching "${searchQuery}"`;
+        } else if (currentFilter === 'active') {
+          message = 'No active tasks. Great job!';
+        } else if (currentFilter === 'completed') {
+          message = 'No completed tasks yet.';
+        }
         list.innerHTML = `<li class="empty-state">${message}</li>`;
         return;
       }
 
-      list.innerHTML = filteredTodos.map((todo) => `
-        <li class="todo-item ${todo.completed ? 'completed' : ''}"
-            data-index="${todo.originalIndex}"
-            draggable="true"
-            ondragstart="handleDragStart(event)"
-            ondragend="handleDragEnd(event)"
-            ondragover="handleDragOver(event)"
-            ondragleave="handleDragLeave(event)"
-            ondrop="handleDrop(event)">
-          <span class="drag-handle">⋮⋮</span>
-          <input
-            type="checkbox"
-            class="todo-checkbox"
-            ${todo.completed ? 'checked' : ''}
-            onchange="toggleComplete(${todo.originalIndex})"
-          />
-          <span class="todo-text" id="text-${todo.originalIndex}">${escapeHtml(todo.text)}</span>
-          <div class="todo-actions">
-            <button class="btn-edit" onclick="editTodo(${todo.originalIndex})">Edit</button>
-            <button class="btn-delete" onclick="deleteTodo(${todo.originalIndex})">Delete</button>
-          </div>
-        </li>
-      `).join('');
+      list.innerHTML = filteredTodos.map((todo) => {
+        const dueDateStatus = todo.completed ? null : getDueDateStatus(todo.dueDate);
+        const itemClasses = [
+          'todo-item',
+          todo.completed ? 'completed' : '',
+          dueDateStatus === 'overdue' ? 'overdue' : '',
+          dueDateStatus === 'due-soon' ? 'due-soon' : ''
+        ].filter(Boolean).join(' ');
+
+        const dueDateHtml = todo.dueDate ? `
+          <div class="due-date ${dueDateStatus || ''}">${formatDueDate(todo.dueDate)}</div>
+        ` : '';
+
+        return `
+          <li class="${itemClasses}"
+              data-index="${todo.originalIndex}"
+              draggable="true"
+              ondragstart="handleDragStart(event)"
+              ondragend="handleDragEnd(event)"
+              ondragover="handleDragOver(event)"
+              ondragleave="handleDragLeave(event)"
+              ondrop="handleDrop(event)">
+            <span class="drag-handle">⋮⋮</span>
+            <input
+              type="checkbox"
+              class="todo-checkbox"
+              ${todo.completed ? 'checked' : ''}
+              onchange="toggleComplete(${todo.originalIndex})"
+            />
+            <div class="todo-content">
+              <span class="todo-text" id="text-${todo.originalIndex}">${escapeHtml(todo.text)}</span>
+              ${dueDateHtml}
+            </div>
+            <div class="todo-actions">
+              <button class="btn-edit" onclick="editTodo(${todo.originalIndex})">Edit</button>
+              <button class="btn-delete" onclick="deleteTodo(${todo.originalIndex})">Delete</button>
+            </div>
+          </li>
+        `;
+      }).join('');
     }
 
     function escapeHtml(text) {
@@ -404,13 +607,19 @@
 
     function addTodo() {
       const input = document.getElementById('todoInput');
+      const dueDateInput = document.getElementById('dueDateInput');
       const text = input.value.trim();
 
       if (text) {
-        todos.push({ text, completed: false });
+        todos.push({
+          text,
+          completed: false,
+          dueDate: dueDateInput.value || null
+        });
         saveTodos();
         renderTodos();
         input.value = '';
+        dueDateInput.value = '';
       }
     }
 
@@ -473,6 +682,20 @@
         saveTodos();
         renderTodos();
       }
+    }
+
+    function clearCompleted() {
+      const completedItems = document.querySelectorAll('.todo-item.completed');
+
+      if (completedItems.length === 0) return;
+
+      completedItems.forEach(item => item.classList.add('removing'));
+
+      setTimeout(() => {
+        todos = todos.filter(todo => !todo.completed);
+        saveTodos();
+        renderTodos();
+      }, 300);
     }
 
     // Handle Enter key on main input
