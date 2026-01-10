@@ -398,6 +398,50 @@
       flex-wrap: wrap;
       gap: 10px;
     }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      transition: bottom 0.3s ease;
+      max-width: 400px;
+    }
+
+    .toast.show {
+      bottom: 30px;
+    }
+
+    .toast-message {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .toast-action {
+      padding: 8px 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .toast-action:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -434,13 +478,79 @@
     <ul class="todo-list" id="todoList"></ul>
   </div>
 
+  <!-- Toast notification -->
+  <div class="toast" id="toast">
+    <span class="toast-message" id="toastMessage"></span>
+    <button class="toast-action" id="toastAction">Undo</button>
+  </div>
+
   <script>
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
     let currentFilter = 'all';
     let searchQuery = '';
+    let deletedTodos = []; // Store deleted todos for undo
+    let toastTimeout = null;
 
     function saveTodos() {
       localStorage.setItem('todos', JSON.stringify(todos));
+    }
+
+    function showToast(message, onUndo) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastAction = document.getElementById('toastAction');
+
+      toastMessage.textContent = message;
+
+      // Clear any existing timeout
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+      }
+
+      // Remove previous event listeners
+      const newToastAction = toastAction.cloneNode(true);
+      toastAction.parentNode.replaceChild(newToastAction, toastAction);
+
+      // Add new event listener
+      document.getElementById('toastAction').addEventListener('click', () => {
+        onUndo();
+        hideToast();
+      });
+
+      // Show toast
+      toast.classList.add('show');
+
+      // Auto-hide after 5 seconds
+      toastTimeout = setTimeout(() => {
+        hideToast();
+        deletedTodos = []; // Clear deleted todos after timeout
+      }, 5000);
+    }
+
+    function hideToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('show');
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+        toastTimeout = null;
+      }
+    }
+
+    function undoDelete() {
+      if (deletedTodos.length === 0) return;
+
+      // Sort by index in descending order to restore correctly
+      // This ensures that when we insert items, the indices remain valid
+      const sortedDeleted = [...deletedTodos].sort((a, b) => b.index - a.index);
+
+      // Restore all deleted todos in reverse order
+      sortedDeleted.reverse().forEach(({ todo, index }) => {
+        todos.splice(index, 0, todo);
+      });
+
+      deletedTodos = [];
+      saveTodos();
+      renderTodos();
     }
 
     function setFilter(filter) {
@@ -670,17 +780,27 @@
     function deleteTodo(index) {
       const item = document.querySelector(`[data-index="${index}"]`);
 
+      // Store the deleted todo for undo
+      const deletedTodo = { todo: { ...todos[index] }, index: index };
+      deletedTodos = [deletedTodo]; // Replace any previous deleted todos
+
       if (item) {
         item.classList.add('removing');
         setTimeout(() => {
           todos.splice(index, 1);
           saveTodos();
           renderTodos();
+
+          // Show toast notification
+          showToast('Task deleted', undoDelete);
         }, 300);
       } else {
         todos.splice(index, 1);
         saveTodos();
         renderTodos();
+
+        // Show toast notification
+        showToast('Task deleted', undoDelete);
       }
     }
 
@@ -689,12 +809,25 @@
 
       if (completedItems.length === 0) return;
 
+      // Store all completed todos for undo (in reverse order to maintain correct indices)
+      deletedTodos = [];
+      todos.forEach((todo, index) => {
+        if (todo.completed) {
+          deletedTodos.push({ todo: { ...todo }, index: index });
+        }
+      });
+
       completedItems.forEach(item => item.classList.add('removing'));
 
       setTimeout(() => {
+        const count = todos.filter(todo => todo.completed).length;
         todos = todos.filter(todo => !todo.completed);
         saveTodos();
         renderTodos();
+
+        // Show toast notification
+        const message = count === 1 ? '1 task deleted' : `${count} tasks deleted`;
+        showToast(message, undoDelete);
       }, 300);
     }
 
